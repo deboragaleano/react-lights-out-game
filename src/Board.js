@@ -95,23 +95,27 @@ class Board extends Component {
 
     return (
       this.state.hasWon ? 'YOU WON!' : 
-      <table className='Board'>
-      <tbody>
-          {this.state.board.map((n, x) => (
-            <tr key={x}>
-            {n.map((v, y) => {
-              const coord = `${x}-${y}`
-              return (
-              <Cell 
-                  isLit={v} 
-                  key={coord}
-                  flipCellsAroundMe={() => this.flipCellsAround(coord)}
-                />)
-            })}
-            </tr>
-          ))}
-      </tbody>
-    </table>
+      <div>
+        <div className="neon-orange">Lights</div>
+        <div className="neon-blue">Out</div>
+        <table className='Board'>
+        <tbody>
+            {this.state.board.map((n, x) => (
+              <tr key={x}>
+              {n.map((v, y) => {
+                const coord = `${x}-${y}`
+                return (
+                <Cell 
+                    isLit={v} 
+                    key={coord}
+                    flipCellsAroundMe={() => this.flipCellsAround(coord)}
+                  />)
+              })}
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
     )
   }
 }
