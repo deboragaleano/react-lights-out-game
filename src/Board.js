@@ -43,14 +43,13 @@ class Board extends Component {
       board: this.createBoard() 
     }
     this.createBoard = this.createBoard.bind(this);
-    this.flipCellsAround = this.flipCellsAround.bind(this);
+    // this.flipCellsAround = this.flipCellsAround.bind(this);
   }
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
 
   createBoard() {
     let board = [];
-
     for(let y=0; y < this.props.nrows; y++) {
       let row = [];
       for( let x=0; x < this.props.ncols; x++) {
@@ -63,9 +62,11 @@ class Board extends Component {
 
   /** handle changing a cell: update board & determine if winner */
   flipCellsAround(coord) {
+    console.log('flipping!')
     let {ncols, nrows} = this.props;
     let board = this.state.board;
     let [y, x] = coord.split("-").map(Number);
+    console.log(x, y)
 
 
     function flipCell(y, x) {
@@ -76,12 +77,16 @@ class Board extends Component {
       }
     }
 
-    // TODO: flip this cell and the cells around it
+   // TODO: flip this cell and the cells around it
+    flipCell(y, x); // flip initial cell
+    flipCell(y, x - 1); // flip left
+    flipCell(y, x + 1); // flip right
+    flipCell(y + 1, x); // flip above
+    flipCell(y - 1, x); // flop below
 
     // win when every cell is turned off
-    // TODO: determine is the game has been won
-
-    // this.setState({board, hasWon});
+    let hasWon = board.every(row => row.every(cell => !cell))
+    this.setState({board, hasWon});
   }
 
 
@@ -94,9 +99,15 @@ class Board extends Component {
       <tbody>
           {this.state.board.map((n, x) => (
             <tr key={x}>
-            {n.map((v, y) => (
-                <Cell isLit={v} key={`${x}-${y}`} />
-            ))}
+            {n.map((v, y) => {
+              const coord = `${x}-${y}`
+              return (
+              <Cell 
+                  isLit={v} 
+                  key={coord}
+                  flipCellsAroundMe={() => this.flipCellsAround(coord)}
+                />)
+            })}
             </tr>
           ))}
       </tbody>
